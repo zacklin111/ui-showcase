@@ -1,0 +1,34 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Design {
+  id               Int      @id @default(autoincrement())
+  title            String
+  description      String?
+  figma_link       String
+  preview_image_url String
+  category         Category @relation(fields: [category_id], references: [id])
+  category_id      Int
+  tags             Tag[]
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  designs     Design[]
+}
+
+model Tag {
+  id      Int      @id @default(autoincrement())
+  name    String   @unique
+  designs Design[]
+} 
